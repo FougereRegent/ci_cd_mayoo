@@ -1,0 +1,91 @@
+version: "3"
+services:
+  quizz-service:
+    image: registry.gitlab.com/fougereregent/quizz-service/quizz
+    command: "dockerize -wait tcp://postgresql:5432 -wait tcp://rabbit_mq:5672 -timeout 60s sh -c 'yarn prisma migrate dev deploy && node --env-file=.env src/main.js'"
+    depends_on:
+      - rabbit_mq
+      - postgresql
+    container_name: quizz-service
+    environment:
+      NODE_ENV: "PROD"
+      DB_PORT: "5432"
+      DB_ADDR: "postgresql"
+      RABBIT_PORT: "5672"
+      RABBIT_ADDR: "rabbit_mq"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.quizz-service.entrypoints=websecure"
+      - "traefik.http.services.quizz_service.loadbalancer.server.port=3000"
+      - "traefik.docker.network=traefik_default"
+      - "traefik.http.routers.quizz_service.tls=true"
+      - "traefik.http.routers.quizz_service.rule=Host(`quizz.damien-venant.ovh`)"
+      - "traefik.http.routers.quizz_service.tls.certresolver=myresolver"
+    networks:
+      - internal
+      - proxy
+
+
+  game-service:
+    image: registry.gitlab.com/fougereregent/quizz-service/game
+    command: "dockerize -wait tcp://redis:6379 -wait tcp://rabbit_mq:5672 -timeout 60s sh -c 'node --env-file=.env src/main.js'"
+    container_name: game-service
+    depends_on:
+      - rabbit_mq
+    environment:
+      NODE_ENV: "PROD"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.game-service.entrypoints=websecure"
+      - "traefik.http.services.game_service.loadbalancer.server.port=3000"
+      - "traefik.docker.network=traefik_default"
+      - "traefik.http.routers.game_service.tls=true"
+      - "traefik.http.routers.game_service.tls.certresolver=myresolver"
+      - "traefik.http.routers.game_service.rule=Host(`game.damien-venant.ovh`)"
+    networks:
+      - internal
+      - proxy
+
+  postgresql:
+    image: postgres:15
+    container_name: database
+    environment:
+      POSTGRES_PASSWORD: quizz
+      POSTGRES_USER: quizz
+      POSTGRES_DB: quizz
+    networks:
+      - internal
+
+  redis:
+    image: redis/redis-stack-server:latest
+    container_name: redis-db
+    environment:
+      RABBITMQ_DEFAULT_USER: "quizz"
+      RABBITMQ_DEFAULT_PASS: "quizz"
+    networks:
+      - internal
+
+  rabbit_mq:
+    container_name: broker
+    image: rabbitmq:3-management
+    environment:
+      RABBITMQ_DEFAULT_USER: "quizz"
+      RABBITMQ_DEFAULT_PASS: "quizz"
+    networks:
+      - internal
+
+  adminer:
+    image: adminer:latest
+    depends_on:
+      - postgresql
+      - redis
+    networks:
+      - internal
+
+networks:
+  proxy:
+    external: true
+    name: traefik_default
+  internal:
+    internal: true
+

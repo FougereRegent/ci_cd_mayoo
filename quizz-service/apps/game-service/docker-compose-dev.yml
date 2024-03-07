@@ -1,0 +1,17 @@
+version: "3"
+services:
+  database:
+    container_name: redis_db
+    image: redis/redis-stack-server:latest
+    ports:
+      - "6379:6379"
+  rabbit_mq:
+    container_name: broker
+    image: rabbitmq:3-management
+    ports:
+      - "8090:15672"
+      - "5672:5672"
+    environment:
+      RABBITMQ_DEFAULT_USER: "quizz"
+      RABBITMQ_DEFAULT_PASS: "quizz"
+

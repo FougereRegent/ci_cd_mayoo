@@ -1,0 +1,28 @@
+node {
+def registryprojet="registry.gitlab.com/fougereregent/quizz-service"
+def IMAGE="$registryprojet/game:${env.BUILD_ID}"
+
+stage('clone'){
+    checkout scm
+}
+
+def img = stage('build'){
+    docker.build("$IMAGE", "-f ./apps/game-service/Dockerfile .")
+}
+
+//stage('run'){
+    // sh 'docker compose up -d'
+    // sh 'docker exec game-api yarn test'
+    // sh 'docker compose down -v'
+//    img.inside(){
+//        sh 'yarn test'
+//    }}
+
+stage('push'){
+    docker.withRegistry("https://registry.gitlab.com", '04e84c46-229c-4a6f-a140-23d43fa55350'){
+        img.push 'latest'
+        img.push()
+    }
+}
+}
+

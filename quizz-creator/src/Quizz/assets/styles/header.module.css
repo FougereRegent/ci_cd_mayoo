@@ -1,0 +1,39 @@
+.header{
+    width: 100%;
+    padding: calc(40px / 2) 40px;
+    background-color: #f78359;
+    min-height: 200px;
+    border-radius: 0 0 10px 10px;
+}
+.nav{
+    margin-bottom: 10px;
+}
+.nav_logo{
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.nav_logo_icon{
+    margin: 0 12px;
+}
+
+.nav_logo_text{
+    font-size: 28px;
+    font-weight: 300;
+    color: #ffffff;
+    font-style: italic;
+    margin-top: -4px;
+}
+
+.line{
+    background-color: white;
+    margin: 12px 4px;
+    height: .5px !important;
+}
+
+.separation{
+    background-color: black;
+    margin: 12px 4px;
+    height: .5px !important;
+}

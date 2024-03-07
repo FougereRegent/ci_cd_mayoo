@@ -1,0 +1,141 @@
+.main_section {
+  padding: 20px 40px;
+  background-color: #f6f2ef;
+}
+
+.container {
+  padding: 20px;
+  transform: translateY(-100px);
+  background-color: #f6f2ef;
+  border-radius: 20px;
+}
+
+.search_section {
+  max-width: 250px;
+  width: 100%;
+  background-color: #f0f0f0;
+  margin: 10px 0;
+  height: 50px;
+  border-radius: 55px;
+  display: grid;
+  grid-template-columns: 15% 85%;
+  padding: 0 0.4rem;
+  position: relative;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search_icon {
+  font-size: 20px;
+  margin-left: 12px;
+  color: rgba(51, 51, 51, 0.377);
+}
+
+.search_input {
+  background: none;
+  outline: none;
+  border: none;
+  line-height: 1;
+  font-weight: 300;
+  font-size: 1.1rem;
+  color: rgba(51, 51, 51, 0.377);
+}
+
+.filter_section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.filter_input {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.filter_select,
+.filter_text {
+  margin-left: 10px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  width: 150px;
+}
+
+.formTitle {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  color: #ffffff;
+}
+
+.formGroup {
+  margin-bottom: 20px;
+  flex-direction: column;
+  display: flex;
+}
+
+.formLabel {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.formInput {
+  width: 50%;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+
+.formInput option {
+  font-size: 16px;
+  padding: 10px;
+}
+
+/* CSS pour les cases à cocher */
+.checkboxContainer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.checkboxInput {
+  margin-right: 8px;
+}
+
+/* CSS pour les dates */
+.dateContainer {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.dateItem {
+  margin-right: 10px;
+}
+
+.formDate {
+  font-size: 16px;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+
+/* CSS pour les champs obligatoires */
+.required {
+  color: #f55e5f;
+  margin-left: 5px;
+}
+
+.errorMessage {
+  color: #f55e5f;
+}
+
+.invalid {
+  border-color: #f55e5f;
+}
+

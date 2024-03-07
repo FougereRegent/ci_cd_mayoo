@@ -1,0 +1,65 @@
+version: "3"
+services:
+  quizz-service:
+    build:
+      context: .
+      dockerfile: ./apps/quizz-service/Dockerfile
+    command: "dockerize -wait tcp://postgresql:5432 -wait tcp://rabbit_mq:5672 -timeout 60s sh -c 'yarn prisma migrate dev deploy && node --env-file=.env src/main.js'"
+    depends_on:
+      - rabbit_mq
+      - postgresql
+    container_name: quizz-service
+    environment:
+      NODE_ENV: "DEV"
+      DB_PORT: "5432"
+      DB_ADDR: "postgresql"
+      RABBIT_PORT: "5672"
+      RABBIT_ADDR: "rabbit_mq"
+    ports:
+      - "8080:3000"
+
+  game-service:
+    build:
+      context: .
+      dockerfile: ./apps/game-service/Dockerfile
+    command: "dockerize -wait tcp://redis:6379 -wait tcp://rabbit_mq:5672 -timeout 60s sh -c 'node --env-file=.env src/main.js'"
+    container_name: game-service
+    depends_on:
+      - rabbit_mq
+    environment:
+      NODE_ENV: "DEV"
+    ports:
+      - "8081:3000"
+
+  postgresql:
+    image: postgres:15
+    container_name: database
+    environment:
+      POSTGRES_PASSWORD: quizz
+      POSTGRES_USER: quizz
+      POSTGRES_DB: quizz
+
+  redis:
+    image: redis/redis-stack-server:latest
+    container_name: redis-db
+    environment:
+      RABBITMQ_DEFAULT_USER: "quizz"
+      RABBITMQ_DEFAULT_PASS: "quizz"
+
+  rabbit_mq:
+    container_name: broker
+    image: rabbitmq:3-management
+    ports:
+      - "8090:15672"
+      - "5672:5672"
+    environment:
+      RABBITMQ_DEFAULT_USER: "quizz"
+      RABBITMQ_DEFAULT_PASS: "quizz"
+
+  adminer:
+    image: adminer:latest
+    depends_on:
+      - postgresql
+      - redis
+    ports:
+      - "8091:8080"

@@ -1,0 +1,38 @@
+version: "3"
+services:
+  postgresql:
+    image: postgres:15
+    container_name: database
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: quizz
+      POSTGRES_USER: quizz
+      POSTGRES_DB: quizz
+
+  redis:
+    image: redis/redis-stack-server:latest
+    container_name: redis-db
+    ports:
+      - "6379:6379"
+    environment:
+      RABBITMQ_DEFAULT_USER: "quizz"
+      RABBITMQ_DEFAULT_PASS: "quizz"
+
+  rabbit_mq:
+    container_name: broker
+    image: rabbitmq:3-management
+    ports:
+      - "8090:15672"
+      - "5672:5672"
+    environment:
+      RABBITMQ_DEFAULT_USER: "quizz"
+      RABBITMQ_DEFAULT_PASS: "quizz"
+
+  adminer:
+    image: adminer:latest
+    depends_on:
+      - postgresql
+      - redis
+    ports:
+      - "8091:8080"

@@ -1,0 +1,22 @@
+node {
+def registryprojet="registry.gitlab.com/fougereregent/api-mayoo"
+def IMAGE="$registryprojet/app:${env.BUILD_ID}"
+
+stage('clone'){
+    checkout scm
+}
+
+def img = stage('build'){
+    docker.build("$IMAGE", "-f ./Dockerfile .")
+}
+
+
+stage('push'){
+    docker.withRegistry("https://registry.gitlab.com", '04e84c46-229c-4a6f-a140-23d43fa55350'){
+        img.push 'latest'
+        img.push()
+    }
+}
+}
+
+

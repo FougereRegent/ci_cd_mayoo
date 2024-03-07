@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int         @id @default(autoincrement())
+  name       String      @unique
+  created_at DateTime    @default(now())
+  scores     UserScore[]
+}
+
+model Quizz {
+  id          Int         @id @default(autoincrement())
+  quizzName   String      @unique
+  description String
+  questions   Questions[]
+  start_date  DateTime
+  end_date    DateTime
+  created_at  DateTime    @default(now())
+  UserScore   UserScore[]
+}
+
+model Questions {
+  id           Int            @id @default(autoincrement())
+  questions    String
+  Quizz        Quizz?         @relation(fields: [quizzId], references: [id])
+  quizzId      Int?
+  responses    Response[]
+  created_at   DateTime       @default(now())
+  UserQuestion UserQuestion[]
+}
+
+model Response {
+  id            Int            @id @default(autoincrement())
+  response      String
+  good_response Boolean
+  Questions     Questions?     @relation(fields: [questionsId], references: [id])
+  questionsId   Int?
+  created_at    DateTime       @default(now())
+  UserResponse  UserResponse[]
+}
+
+model UserScore {
+  id        Int            @id @default(autoincrement())
+  quizz     Quizz          @relation(fields: [quizzId], references: [id])
+  user      User?          @relation(fields: [userId], references: [id])
+  questions UserQuestion[]
+  userId    Int?
+  quizzId   Int
+}
+
+model UserQuestion {
+  id          Int            @id @default(autoincrement())
+  question    Questions      @relation(fields: [questionsId], references: [id])
+  created_at  DateTime       @default(now())
+  responses   UserResponse[]
+  questionsId Int
+  UserScore   UserScore?     @relation(fields: [userScoreId], references: [id])
+  userScoreId Int?
+}
+
+model UserResponse {
+  id             Int           @id @default(autoincrement())
+  response       Response      @relation(fields: [responseId], references: [id])
+  responseId     Int
+  UserQuestion   UserQuestion? @relation(fields: [userQuestionId], references: [id])
+  userQuestionId Int?
+}
