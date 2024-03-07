@@ -29,17 +29,11 @@ jobs:
       with:
         cmd: install
         dir: app-mayoo
-    - name: Run Install Quiz Creator
-      working-directory: ./quizz-creator
-      run: npm install
     - name: Build API
       uses: borales/actions-yarn@v4
       with:
         cmd: build
         dir: ./quizz-service
-    - name: Build Quiz-creator
-      working-directory: ./quizz-creator
-      run: npm run build
     - name: Test API
       uses: borales/actions-yarn@v4
       with:
