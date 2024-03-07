@@ -34,11 +34,6 @@ jobs:
       with:
         cmd: build
         dir: ./quizz-service
-    - name: Build APP
-      uses: borales/actions-yarn@v4
-      with:
-        cmd: build
-        dir: ./app-mayoo
     - name: Build Quiz-creator
       working-directory: ./quizz-creator
       run: npm run build
