@@ -1,0 +1,16 @@
+name: Docker Image CI
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  call-workflow-1-in-local-repo:
+    uses: FougereRegent/ci_cd_mayoo/.github/workflows/test.yml@c4298a4a0778ed9af9e8690f76862704a01805b0
+  build: 
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      working-directory: ./quizz-service
+      run: docker build . --file /Dockerfile --tag my-image-name:$(date +%s)
