@@ -29,6 +29,9 @@ jobs:
       with:
         cmd: install
         dir: app-mayoo
+    - name: Run Install Quiz Creator
+      working-directory: ./quizz-creator
+      run: npm build
     - name: Build API
       uses: borales/actions-yarn@v4
       with:
