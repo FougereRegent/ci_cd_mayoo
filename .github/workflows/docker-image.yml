@@ -81,7 +81,7 @@ jobs:
           context: ./quizz-creator
           file: ./quizz-creator/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/game-mayoo:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/quizz-creator:latest
   
  
   build-app-mayoo:
@@ -107,4 +107,4 @@ jobs:
           context: ./app-mayoo
           file: ./app-mayoo/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/game-mayoo:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/app-mayoo:latest
