@@ -7,26 +7,45 @@ const QuizzDetails = () => {
     const navigate = useNavigate();
     const [questionNumber, setQuestionNumber] = useState(1);
     const [quizName, setQuizName] = useState("");
-    const [category, setCategory] = useState("");
+    const [quizDescription, setQuizDescription] = useState("");
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const [invalidFields, setInvalidFields] = useState([]);
+    const [quizData, setQuizData] = useState(null);
 
-    const redirectToQuestion = () => {
+    const redirectToQuestion = (e) => {
+        e.preventDefault();
+
         const invalidFieldsArray = [];
-        if(!quizName) invalidFieldsArray.push("quizName");
-        if(!category) invalidFieldsArray.push("category");
-        if(!startDate) invalidFieldsArray.push("startDate");
-        if(!endDate) invalidFieldsArray.push("endDate");
-        setInvalidFields(invalidFieldsArray);
+        if (!quizName) invalidFieldsArray.push("quizName");
+        if (!quizDescription) invalidFieldsArray.push("quizDescription");
+        if (!startDate) invalidFieldsArray.push("startDate");
+        if (!endDate) invalidFieldsArray.push("endDate");
 
-        if(invalidFieldsArray.length > 0) {
-            //setErrorMessage("Veuillez remplir tous les champs obligatoires.");
+        //Vérification des dates de parutions
+        if (new Date(startDate) >= new Date(endDate)) {
+            setErrorMessage("La date de début doit être avant la date de fin");
             return;
         }
 
-        navigate(`/quizz/question/${questionNumber}`);
+        setInvalidFields(invalidFieldsArray);
+
+        if (invalidFieldsArray.length > 0) {
+            return;
+        }
+
+        const newQuizData = {
+            name: quizName,
+            description: quizDescription,
+            start_date: new Date(startDate).toISOString(),
+            end_date: new Date(endDate).toISOString(),
+
+            questions: [],
+        };
+        setQuizData(newQuizData);
+
+        navigate(`/quizz/question/${questionNumber}`, { state: { newQuizData } });
         setQuestionNumber(prevNumber => prevNumber + 1);
     };
 
@@ -44,21 +63,14 @@ const QuizzDetails = () => {
                     {invalidFields.includes("quizName") && <div className={styles.errorMessage}>Renseignez un nom</div>}
                 </div>
                 <div className={styles.formGroup}>
-                    <label className={styles.formLabel}><span className={styles.required}>*</span> Choisissez une catégorie :</label>
-                    <select
-                        id="quizzCategorie"
-                        className={`${styles.formInput} ${invalidFields.includes("category") && styles.invalid}`}
-                        value={category}
-                        onChange={(e) => setCategory(e.target.value)}
-                    >
-                        <option value="">Sélectionnez une catégorie</option>
-                        <option value="sante">Santé</option>
-                        <option value="region">Région</option>
-                        <option value="saisonnalite">Saisonnalité</option>
-                        <option value="devine">Devine</option>
-                        <option value="pays">Pays producteur</option>
-                    </select>
-                    {invalidFields.includes("category") && <div className={styles.errorMessage}>Renseignez une catégorie</div>}
+                    <label className={styles.formLabel}><span className={styles.required}>*</span> Description :</label>
+                    <input
+                        type="text"
+                        className={`${styles.formInput} ${invalidFields.includes("quizDescription") && styles.invalid}`}
+                        value={quizDescription}
+                        onChange={(e) => setQuizDescription(e.target.value)}
+                    />
+                    {invalidFields.includes("quizDescription") && <div className={styles.errorMessage}>Renseignez une description</div>}
                 </div>
                 <div className={styles.dateContainer}>
                     <div className={styles.dateItem}>
@@ -89,7 +101,7 @@ const QuizzDetails = () => {
                     </div>
                 </div>
                 {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
-                <div className={"button-container"}>
+                <div className={"button-app"}>
                     <button onClick={redirectToQuestion}>
                         Créer les questions
                     </button>
@@ -97,7 +109,6 @@ const QuizzDetails = () => {
             </div>
         </main>
     );
-
 };
 
 export default QuizzDetails;
