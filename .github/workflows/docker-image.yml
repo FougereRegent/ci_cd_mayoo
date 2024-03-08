@@ -6,7 +6,7 @@ on:
 
 jobs:
   call-workflow-1-in-local-repo:
-    uses: ./.github/workflows/resusable-build-workflow.yml
+    uses: ./.github/workflows/reusable-build-workflow.yml
   build-quiz-api: 
     runs-on: ubuntu-latest
     steps:
