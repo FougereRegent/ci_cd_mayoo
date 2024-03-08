@@ -6,11 +6,36 @@ on:
 
 jobs:
   call-workflow-1-in-local-repo:
-    uses: ./.github/workflows/test.yml
-  build: 
+    uses: ./.github/workflows/resusable-build-workflow.yml
+  build-quiz-api: 
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Build the Docker image
+    - name: Build api quiz
       working-directory: ./quizz-service
-      run: docker build . --file /Dockerfile --tag my-image-name:$(date +%s)
+      run: |
+        docker build . --file ./quizz-service/apps/quizz-service/Dockerfile --tag fouegereregent39/quizz-mayoo:$(date +%s)
+  build-game-api:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build api game
+      working-directory: ./quizz-service
+      run: |
+        docker build . --file ./quizz-service/apps/game-service/Dockerfile --tag fouegereregent39/game-mayoo:$(date +%s)
+  build-quiz-creator:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build quiz creator
+      working-directory: ./quizz-service
+      run: |
+        docker build . --file ./quizz-creator/Dockerfile --tag fouegereregent39/quizz-creator:$(date +%s)
+  build-app:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build api game
+      working-directory: ./quizz-service
+      run: |
+        docker build . --file ./app-mayoo//Dockerfile --tag fouegereregent39/app-mayoo:$(date +%s)
