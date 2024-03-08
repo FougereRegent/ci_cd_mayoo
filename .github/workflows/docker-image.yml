@@ -6,7 +6,7 @@ on:
 
 jobs:
   call-workflow-1-in-local-repo:
-    uses: FougereRegent/ci_cd_mayoo/.github/workflows/test.yml@c4298a4a0778ed9af9e8690f76862704a01805b0
+    uses: ./.github/workflows/test.yml
   build: 
     runs-on: ubuntu-latest
     steps:
