@@ -9,7 +9,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  test-quiz-api:
     name: Test API Quiz
     runs-on: ubuntu-latest
     steps:
@@ -23,11 +23,6 @@ jobs:
       with:
         cmd: install
         dir: quizz-service
-    - name: Run Install APP
-      uses: borales/actions-yarn@v4
-      with:
-        cmd: install
-        dir: app-mayoo
     - name: Build API
       uses: borales/actions-yarn@v4
       with:
