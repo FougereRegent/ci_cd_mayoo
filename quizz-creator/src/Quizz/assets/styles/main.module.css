@@ -10,6 +10,9 @@
   border-radius: 20px;
 }
 
+/**
+   Css pour les filtres
+ */
 .search_section {
   max-width: 250px;
   width: 100%;
@@ -45,6 +48,7 @@
   display: flex;
   align-items: center;
   margin-bottom: 20px;
+  margin-top: 20px;
 }
 
 .filter_input {
@@ -61,6 +65,15 @@
   border-radius: 5px;
   font-size: 14px;
   width: 150px;
+}
+
+.filter_text:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.filter_label {
+  font-weight: normal;
 }
 
 .formTitle {
@@ -97,7 +110,14 @@
   padding: 10px;
 }
 
-/* CSS pour les cases à cocher */
+.formInput:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+/**
+  CSS pour les cases à cocher
+ */
 .checkboxContainer {
   display: flex;
   align-items: center;
@@ -108,7 +128,9 @@
   margin-right: 8px;
 }
 
-/* CSS pour les dates */
+/**
+  CSS pour les dates
+ */
 .dateContainer {
   display: flex;
   margin-bottom: 10px;
@@ -125,7 +147,9 @@
   margin-bottom: 10px;
 }
 
-/* CSS pour les champs obligatoires */
+/**
+  CSS pour les champs obligatoires
+ */
 .required {
   color: #f55e5f;
   margin-left: 5px;
@@ -139,3 +163,104 @@
   border-color: #f55e5f;
 }
 
+/* Pour les écrans de petite taille */
+@media only screen and (max-width: 600px) {
+  .container {
+    padding: 10px;
+    border-radius: 10px;
+    transform: translateY(0);
+  }
+
+  .filter_section {
+    flex-direction: column;
+  }
+
+  .filter_input {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  .filter_select,
+  .filter_text {
+    width: 100%;
+  }
+
+  .formInput {
+    width: 100%;
+  }
+}
+
+/* Pour les écrans de petite taille */
+@media only screen and (max-width: 600px) {
+  .container {
+    padding: 10px;
+    border-radius: 10px;
+    transform: translateY(0);
+  }
+
+  .filter_section {
+    flex-direction: column;
+  }
+
+  .filter_input {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  .filter_select,
+  .filter_text {
+    width: 100%;
+  }
+
+  .formInput {
+    width: 100%;
+  }
+}
+
+/* Pour les écrans de taille moyenne */
+@media only screen and (min-width: 601px) and (max-width: 1024px) {
+  .container {
+    padding: 15px;
+    border-radius: 15px;
+    transform: translateY(-50px);
+  }
+
+  .filter_section {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .filter_input {
+    margin-right: 20px;
+    margin-bottom: 10px;
+  }
+
+  .filter_select,
+  .filter_text {
+    width: 200px;
+  }
+}
+
+/* Pour les écrans de grande taille */
+@media only screen and (min-width: 1025px) {
+  .container {
+    padding: 20px;
+    border-radius: 20px;
+    transform: translateY(-100px);
+  }
+
+  .filter_section {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .filter_input {
+    margin-right: 20px;
+    margin-bottom: 10px;
+  }
+
+  .filter_select,
+  .filter_text {
+    width: 250px;
+  }
+}

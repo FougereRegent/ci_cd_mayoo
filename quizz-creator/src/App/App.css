@@ -2,7 +2,7 @@
 
 .App {
   font-family: 'quicksand-bold', sans-serif;
-  background-color: white;
+  background-color: #f6f2ef;
 }
 
 .Auth-form-container {
@@ -19,7 +19,7 @@
   padding-top: 30px;
   padding-bottom: 20px;
   border-radius: 8px;
-  background-color: white;
+  background-color: #f6f2ef;
 }
 
 .Auth-form-content {
@@ -60,7 +60,7 @@ label{
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: #f6f2ef;
 }
 
 .App-link {

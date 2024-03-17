@@ -1,11 +1,14 @@
-import React, { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import styles from "../assets/styles/main.module.css";
 import header from "../assets/styles/header.module.css";
+import API_URL from "../../config/config.dev";
 
 const QuestionDetail = () => {
-    const { questionNumber } = useParams();
+    const location = useLocation();
     const navigate = useNavigate();
+
+    const { questionNumber } = useParams();
     const maxQuestionNumber = 12;
     const [question, setQuestion] = useState("");
     const [responses, setResponses] = useState(["", "", "", ""]);
@@ -14,10 +17,34 @@ const QuestionDetail = () => {
     const [errorMessages, setErrorMessages] = useState({
         question: "",
         responses: ["", "", "", ""],
-        correctAnswers: ""
+        good_response: ""
     });
     const invalidFieldsArray = [];
-    const newErrorMessages = { question: "", responses: ["", "", "", ""], correctAnswers: "" };
+    const newErrorMessages = { question: "", responses: ["", "", "", ""], good_response: "" };
+
+    const [quizData, setQuizData] = useState({ questions: [] });
+
+    const formatResponses = () => {
+        const formattedResponses = responses.map((response, index) => ({
+            response: response,
+            good_response: correctAnswers[index]
+        }));
+        return formattedResponses;
+    };
+
+    const newQuestion = {
+        question: question,
+        responses: formatResponses()
+    };
+
+    useEffect(() => {
+        if (location.state && location.state.newQuizData) {
+            setQuizData(location.state.newQuizData);
+        } else {
+            // Gérer le cas où newQuizData n'est pas défini
+        }
+    }, [location.state]);
+
 
     const handleNextQuestion = () => {
         if (!question) {
@@ -30,15 +57,23 @@ const QuestionDetail = () => {
                 newErrorMessages.responses[index] = "Renseignez la réponse";
             }
         });
-        const isAnyCorrectAnswerSelected = correctAnswers.filter(answer => answer).length === 1;
+        const isAnyCorrectAnswerSelected = correctAnswers.filter(answer => answer).length >= 1;
         if (!isAnyCorrectAnswerSelected) {
             invalidFieldsArray.push("correctAnswers");
-            newErrorMessages.correctAnswers = "Veuillez sélectionner une réponse correcte";
+            newErrorMessages.good_response = "Veuillez sélectionner la/les réponse(s) correcte(s)";
         }
         setInvalidFields(invalidFieldsArray);
         setErrorMessages(newErrorMessages);
 
         if (invalidFieldsArray.length === 0) {
+            const updatedQuestions = [...quizData.questions, newQuestion];
+            const updatedQuizData = {
+                ...quizData,
+                questions: updatedQuestions,
+            };
+
+            setQuizData(updatedQuizData);
+
             setQuestion("");
             setResponses(["", "", "", ""]);
             setCorrectAnswers([false, false, false, false]);
@@ -59,10 +94,10 @@ const QuestionDetail = () => {
                 newErrorMessages.responses[index] = "Renseigner la réponse";
             }
         });
-        const isAnyCorrectAnswerSelected = correctAnswers.filter(answer => answer).length === 1;
+        const isAnyCorrectAnswerSelected = correctAnswers.filter(answer => answer).length >= 1;
         if (!isAnyCorrectAnswerSelected) {
             invalidFieldsArray.push("correctAnswers");
-            newErrorMessages.correctAnswers = "Veuillez sélectionner une réponse correcte";
+            newErrorMessages.good_response = "Veuillez sélectionner la/les réponse(s) correcte(s)";
         }
         setInvalidFields(invalidFieldsArray);
         setErrorMessages(newErrorMessages);
@@ -70,13 +105,38 @@ const QuestionDetail = () => {
         if (invalidFieldsArray.length > 0) {
             return;
         } else {
+            const updatedQuestions = [...quizData.questions, newQuestion];
+            const updatedQuizData = {
+                ...quizData,
+                questions: updatedQuestions,
+            };
+
+            setQuizData(updatedQuizData);
+
+            fetch(API_URL + "quizz", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(updatedQuizData)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        navigate(`/quizz`);
+                    } else {
+                        console.error("Erreur lors de la création du quiz");
+                    }
+                })
+                .catch(error => {
+                    console.error("Erreur lors de la communication avec l'API", error);
+                });
+
             setQuestion("");
             setResponses(["", "", "", ""]);
             setCorrectAnswers([false, false, false, false]);
-
-            navigate(`/quizz`);
         }
     };
+
 
     return (
         <main className={styles.main_section}>
@@ -84,7 +144,7 @@ const QuestionDetail = () => {
                 <h4>Question {questionNumber}/12</h4>
                 <div className={styles.formGroup}>
                     <label className={styles.formLabel}><span className={styles.required}>*</span> Intitulé de la question :</label>
-                    <input
+                    <textarea
                         type="text"
                         value={question}
                         onChange={(e) => setQuestion(e.target.value)}
@@ -122,9 +182,9 @@ const QuestionDetail = () => {
                             {errorMessages.responses[index] && <div className={styles.errorMessage}>{errorMessages.responses[index]}</div>}
                         </div>
                     ))}
-                    {invalidFields.includes("correctAnswers") && <div className={styles.errorMessage}>{errorMessages.correctAnswers}</div>}
+                    {invalidFields.includes("correctAnswers") && <div className={styles.errorMessage}>{errorMessages.good_response}</div>}
                 </div>
-                <div className={"button-container"}>
+                <div className={"button-app"}>
                     {parseInt(questionNumber, 10) < maxQuestionNumber ? (
                         <button onClick={handleNextQuestion}>Question Suivante</button>
                     ) : (
